@@ -1,34 +1,29 @@
+Import["lib/logging"]
 Import["lib/nums"]
 Import["lib/io"]
 Import["lib/cmd"]
 Import["lib/time"]
 Import["lib/programs"]
+Import["lib/tests"]
 
 
 WaitTime = 0
 
 
-PsuedoIf = C.A.B.(
-    C[A][B]
-)
-PsuedoIf2 = CA.AA.BA.(
-    CA[AA][BA]
-)
-
 UniversalCommands = Directory.User.(
-	PsuedoIf2[Eq[User] ["help"]][
+	If[Eq[User] ["help"]][
 		pass.(PipeFn[pass.(PutTwoln["Commands: [cd clear exit help ls pwd]"]["There is nothing but yourself; nothing can prove what you feel or see to be true. All you can ever know is that you are. Use your own intuition on your pilgrimage. Reach the end and find yourself."])][Directory])
 	][
-	PsuedoIf2[Eq[User] ["pwd"]][
+	If[Eq[User] ["pwd"]][
 		pass.(PipeFn[pass.(PutStrln[Directory])][Directory])
 	][
-	PsuedoIf2[Eq[User] ["exit"]][
+	If[Eq[User] ["exit"]][
 		pass.(PipeFn[pass.(PutStrln["Exiting..."])][Break[_]])
 	][
-	PsuedoIf2[Eq[User] ["clear"]][
+	If[Eq[User] ["clear"]][
 		pass.(PipeFn[pass.(Clear[_])][Directory])
 	][
-		pass.(Directory)
+		pass.(PipeFn[pass.(PutFive["program: '"][User]["' not found in directory: '"][Directory]["'"])][Directory])
 	]]]]
 )
 
@@ -37,76 +32,78 @@ IsUniversalCommand = User.(
 	Or[Eq[User] ["help"]][Or[Eq[User] ["pwd"]][Or[Eq[User] ["exit"]][Eq[User] ["clear"]]]]
 )
 
-InHome = User.(Eq[User]["primes"])
 
-HomeDirectory = Directory.User.(
-	PsuedoIf2[IsUniversalCommand[User]][
+
+
+RootDirectory = Directory.User.(
+	If[Eq[User] ["cd home"]][
+		pass.("/home")
+	][
+	If[Eq[User] ["ls"]][
+		pass.(PipeFn[pass.(PutStrln["home"])][Directory])
+	][
 		UniversalCommands[Directory][User]
-	][
-	PsuedoIf2[Eq[User] ["primes"]][
-		pass.(PipeFn[pass.(Primes[_])][Directory])
-	][
-	PsuedoIf2[Eq[User] ["cd Documents"]][
-		pass.("/Documents")
-	][
-	PsuedoIf2[Eq[User] ["ls"]][
-		pass.(PipeFn[pass.(PutStrln["Documents primes"])][Directory])
-	][
-	PsuedoIf2[Not[InHome[User]]][
-		pass.(PipeFn[pass.(PutFive["program: '"][User]["' not found in directory: '"][Directory]["'"])][Directory])
-	][
-		pass.(PipeFn[pass.(PutFive["program: '"][User]["' not found in directory: '"][Directory]["'"])][Directory])
-	]]]]]
+	]]]
 )
 
-// pass.(Directory)
-
-InDocuments = User.(Eq[User]["key"])
-
-DocumentsDirectory = Directory.User.(
-	PsuedoIf2[IsUniversalCommand[User]][
-		UniversalCommands[Directory][User]
-	][
-	PsuedoIf2[Eq[User] ["cd .."]][
+HomeDirectory = Directory.User.(
+	If[Eq[User] ["cd .."]][
 		pass.("/")
 	][
-	PsuedoIf2[Eq[User] ["key"]][
+	If[Eq[User] ["cd Documents"]][
+		pass.("/home/Documents")
+	][
+	If[Eq[User] ["ls"]][
+		pass.(PipeFn[pass.(PutStrln[".. Documents"])][Directory])
+	][
+		UniversalCommands[Directory][User]
+	]]]
+)
+
+DocumentsDirectory = Directory.User.(
+	If[Eq[User] ["cd .."]][
+		pass.("/home")
+	][
+	If[Eq[User] ["key"]][
 		pass.(PipeFn[pass.(Key[_])][Directory])
 	][
-	PsuedoIf2[Eq[User] ["ls"]][
-		pass.(PipeFn[pass.(PutStrln[".. key"])][Directory])
+	If[Eq[User] ["primes"]][
+		pass.(PipeFn[pass.(Primes[_])][Directory])
 	][
-	PsuedoIf2[Not[InDocuments[User]]][
-		pass.(PipeFn[pass.(PutFive["program: '"][User]["' not found in directory: '"][Directory]["'"])][Directory])
+	If[Eq[User] ["ls"]][
+		pass.(PipeFn[pass.(PutStrln[".. key primes"])][Directory])
 	][
-		pass.(Directory)
-	]]]]]
+		UniversalCommands[Directory][User]
+	]]]]
 )
 
 
 
 Main = Directory.(
 	User.(
-		PsuedoIf[Eq[Directory]["/"]][
+		If[Eq[Directory]["/"]][
+			RootDirectory[Directory][User]
+		][
+		If[Eq[Directory]["/home"]][
 			HomeDirectory[Directory][User]
 		][
-		PsuedoIf[Eq[Directory]["/Documents"]][
+		If[Eq[Directory]["/home/Documents"]][
 			DocumentsDirectory[Directory][User]
 		][
 			Break
-		]][_]
+		]]][_]
 	)[GetCmd[_]]
 )
 
-PutStrln["Booting disk SANCTUSMACHINA..."]
+Info["Booting disk SANCTUSMACHINA..."]
 
 Halt[WaitTime]
 
-PutStrln["512 bytes read"]
+Info["512 bytes read"]
 
 Halt[WaitTime]
 
-PutStrln["loaded kernel"]
+Info["loaded kernel"]
 
 
 
