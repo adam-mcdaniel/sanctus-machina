@@ -1,12 +1,12 @@
 
-Check = Check_A.Check_B.(
+Check = Check_A.(Check_B.(
 	If[Eq[Check_A][Check_B]][
 		"GOOD"
 	][
 		"ERR"
 	]
 )
-
+)
 PutTwo["=[ Interpreter Check 1 ]===[ TRUE ]==> "][ Check[True["a"]["b"]]["a"] ]
 PutTwo["=[ Interpreter Check 2 ]===[ FALSE ]=> "][ Check[False[False["a"]["b"]][False["c"]["d"]]]["d"] ]
 PutTwo["=[ Interpreter Check 3 ]===[ AND ]===> "][ Check[And[True][And[False][True]]][False] ]

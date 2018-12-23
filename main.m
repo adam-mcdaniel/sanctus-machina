@@ -10,9 +10,9 @@ Import["lib/tests"]
 WaitTime = 0
 
 
-UniversalCommands = User.(
+UniversalCommands = Directory.User.(
 	If[Eq[User] ["help"]][
-		pass.(PutTwoln["Commands: [cd clear exit help ls pwd]"]["There is nothing but yourself; nothing can prove what you feel or see to be true. All you can ever know is that you are. Use your own intuition on your pilgrimage. Reach the end and find yourself."])
+		pass.(PutTwo["Commands: [cd clear exit help ls pwd]"]["There is nothing but yourself; nothing can prove what you feel or see to be true. All you can ever know is that you are. Use your own intuition on your pilgrimage. Reach the end and find yourself."])
 	][
 	If[Eq[User] ["pwd"]][
 		pass.(PutStrln[Directory])
@@ -36,19 +36,17 @@ IsUniversalCommand = User.(
 
 
 RootDirectory = Directory.User.(
-	Putln[
-		If[Eq[User] ["cd home"]][
-			pass.("/home")
-		][
-		If[Eq[User] ["cd log"]][
-			pass.("/log")
-		][
-		If[Eq[User] ["ls"]][
-			pass.(PipeFn[pass.(PutStrln["log home"])][Directory])
-		][
-			pass.(PipeFn[pass.(UniversalCommands[Directory][User][_])][Directory])
-		]]]
-	]
+	If[Eq[User] ["cd home"]][
+		pass.("/home")
+	][
+	If[Eq[User] ["cd log"]][
+		pass.("/log")
+	][
+	If[Eq[User] ["ls"]][
+		pass.(PipeFn[pass.(PutStrln["log home"])][Directory])
+	][
+		pass.(PipeFn[pass.(UniversalCommands[Directory][User][_])][Directory])
+	]]]
 )
 
 
@@ -102,15 +100,16 @@ Main = Directory.(
 		If[Eq[Directory]["/"]]
 			[RootDirectory][
 		If[Eq[Directory]["/log"]]
-			[RootDirectory][
+			[LogDirectory][
 		If[Eq[Directory]["/home"]]
 			[HomeDirectory][
 		If[Eq[Directory]["/home/Documents"]]
 			[DocumentsDirectory]
 			[pass.(Break)]]]]
-		[Putln[Directory]][Putln[User]]
+		[Directory][User]
 	)[GetCmd[_]][_]
 )
+
 
 PutTwo["=[ ROOT_DIR Check 1 ]======[ home ]=======> "][ Check[RootDirectory["/"]["cd home"][_]]["/home"] ]
 PutTwo["=[ ROOT_DIR Check 2 ]======[ log ]========> "][ Check[RootDirectory["/"]["cd log"][_]]["/log"] ]
@@ -125,12 +124,10 @@ Halt[WaitTime]
 Debug["512 bytes read"]
 Halt[WaitTime]
 Debug["Loaded Kernel"]
+Info["Booting to OS"]
 Info["Finishing Up"]
 
-Warning["Starting Debugging Instance of OS"]
-m = Main["/"]
-m = Main[m]
-
-
-Info["Booting to OS"]
+// PutThree["Test"]["ing"][":)"]
+// PutFive["Test 1 | "]["Test 2 | "]["Test 3 | "]["Test 4 | "]["Test 5"]
+// PutFive["Test 1 | "]["Test 2 | "]["Test 3 | "]["Test 4 | "]["Test 5"]
 Rec[Main]["/"]
