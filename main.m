@@ -10,20 +10,20 @@ Import["lib/tests"]
 WaitTime = 0
 
 
-UniversalCommands = Directory.User.(
+UniversalCommands = User.(
 	If[Eq[User] ["help"]][
-		pass.(PipeFn[pass.(PutTwoln["Commands: [cd clear exit help ls pwd]"]["There is nothing but yourself; nothing can prove what you feel or see to be true. All you can ever know is that you are. Use your own intuition on your pilgrimage. Reach the end and find yourself."])][Directory])
+		pass.(PutTwoln["Commands: [cd clear exit help ls pwd]"]["There is nothing but yourself; nothing can prove what you feel or see to be true. All you can ever know is that you are. Use your own intuition on your pilgrimage. Reach the end and find yourself."])
 	][
 	If[Eq[User] ["pwd"]][
-		pass.(PipeFn[pass.(PutStrln[Directory])][Directory])
+		pass.(PutStrln[Directory])
 	][
 	If[Eq[User] ["exit"]][
-		pass.(PipeFn[pass.(PutStrln["Exiting..."])][Break[_]])
+		pass.(PutStrln["Exiting..."])
 	][
 	If[Eq[User] ["clear"]][
-		pass.(PipeFn[pass.(Clear[_])][Directory])
+		pass.(Clear[_])
 	][
-		pass.(PipeFn[pass.(PutFive["program: '"][User]["' not found in directory: '"][Directory]["'"])][Directory])
+		pass.(PutFive["program: '"][User]["' not found in directory: '"][Directory]["'"])
 	]]]]
 )
 
@@ -36,15 +36,33 @@ IsUniversalCommand = User.(
 
 
 RootDirectory = Directory.User.(
-	If[Eq[User] ["cd home"]][
-		pass.("/home")
+	Putln[
+		If[Eq[User] ["cd home"]][
+			pass.("/home")
+		][
+		If[Eq[User] ["cd log"]][
+			pass.("/log")
+		][
+		If[Eq[User] ["ls"]][
+			pass.(PipeFn[pass.(PutStrln["log home"])][Directory])
+		][
+			pass.(PipeFn[pass.(UniversalCommands[Directory][User][_])][Directory])
+		]]]
+	]
+)
+
+
+LogDirectory = Directory.User.(
+	If[Eq[User] ["cd .."]][
+		pass.("/")
 	][
 	If[Eq[User] ["ls"]][
-		pass.(PipeFn[pass.(PutStrln["home"])][Directory])
+		pass.(PipeFn[pass.(PutStrln[".."])][Directory])
 	][
-		UniversalCommands[Directory][User]
-	]]]
+		pass.(PipeFn[pass.(UniversalCommands[Directory][User][_])][Directory])
+	]]
 )
+
 
 HomeDirectory = Directory.User.(
 	If[Eq[User] ["cd .."]][
@@ -56,7 +74,7 @@ HomeDirectory = Directory.User.(
 	If[Eq[User] ["ls"]][
 		pass.(PipeFn[pass.(PutStrln[".. Documents"])][Directory])
 	][
-		UniversalCommands[Directory][User]
+		pass.(PipeFn[pass.(UniversalCommands[Directory][User][_])][Directory])
 	]]]
 )
 
@@ -73,7 +91,7 @@ DocumentsDirectory = Directory.User.(
 	If[Eq[User] ["ls"]][
 		pass.(PipeFn[pass.(PutStrln[".. key primes"])][Directory])
 	][
-		UniversalCommands[Directory][User]
+		pass.(UniversalCommands[Directory][User][_])
 	]]]]
 )
 
@@ -81,30 +99,38 @@ DocumentsDirectory = Directory.User.(
 
 Main = Directory.(
 	User.(
-		If[Eq[Directory]["/"]][
-			RootDirectory[Directory][User]
-		][
-		If[Eq[Directory]["/home"]][
-			HomeDirectory[Directory][User]
-		][
-		If[Eq[Directory]["/home/Documents"]][
-			DocumentsDirectory[Directory][User]
-		][
-			Break
-		]]][_]
-	)[GetCmd[_]]
+		If[Eq[Directory]["/"]]
+			[RootDirectory][
+		If[Eq[Directory]["/log"]]
+			[RootDirectory][
+		If[Eq[Directory]["/home"]]
+			[HomeDirectory][
+		If[Eq[Directory]["/home/Documents"]]
+			[DocumentsDirectory]
+			[pass.(Break)]]]]
+		[Putln[Directory]][Putln[User]]
+	)[GetCmd[_]][_]
 )
 
-Info["Booting disk SANCTUSMACHINA..."]
+PutTwo["=[ ROOT_DIR Check 1 ]======[ home ]=======> "][ Check[RootDirectory["/"]["cd home"][_]]["/home"] ]
+PutTwo["=[ ROOT_DIR Check 2 ]======[ log ]========> "][ Check[RootDirectory["/"]["cd log"][_]]["/log"] ]
+PutTwo["=[ LOG_DIR  Check 1 ]======[ log ]========> "][ Check[LogDirectory["/log"]["cd .."][_]]["/"] ]
+PutTwo["=[ HOME_DIR Check 1 ]======[ Documents ]==> "][ Check[HomeDirectory["/home"]["cd .."][_]]["/"] ]
+PutTwo["=[ HOME_DIR Check 2 ]======[ Documents ]==> "][ Check[HomeDirectory["/home"]["cd Documents"][_]]["/home/Documents"] ]
 
+
+
+Debug["Booting disk SANCTUSMACHINA..."]
 Halt[WaitTime]
-
-Info["512 bytes read"]
-
+Debug["512 bytes read"]
 Halt[WaitTime]
+Debug["Loaded Kernel"]
+Info["Finishing Up"]
 
-Info["loaded kernel"]
+Warning["Starting Debugging Instance of OS"]
+m = Main["/"]
+m = Main[m]
 
 
-
+Info["Booting to OS"]
 Rec[Main]["/"]
