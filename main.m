@@ -127,7 +127,4 @@ Debug["Loaded Kernel"]
 Info["Booting to OS"]
 Info["Finishing Up"]
 
-// PutThree["Test"]["ing"][":)"]
-// PutFive["Test 1 | "]["Test 2 | "]["Test 3 | "]["Test 4 | "]["Test 5"]
-// PutFive["Test 1 | "]["Test 2 | "]["Test 3 | "]["Test 4 | "]["Test 5"]
 Rec[Main]["/"]

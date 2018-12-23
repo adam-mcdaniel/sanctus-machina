@@ -5,6 +5,3 @@ Prompt = Prompt_Str.(PsuedoPrompt[call_me.(PutStr[Prompt_Str])] [Input])
 GetCmd = anything.(
 	Prompt["$ "]
 )
-// GetCmd = anything.(
-// 	Prompt[""]
-// )
