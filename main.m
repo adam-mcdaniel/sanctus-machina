@@ -54,11 +54,17 @@ LogDirectory = Directory.User.(
 	If[Eq[User] ["cd .."]][
 		pass.("/")
 	][
+	If[Eq[User] ["key"]][
+		pass.(PipeFn[pass.(Key[_])][Directory])
+	][
+	If[Eq[User] ["primes"]][
+		pass.(PipeFn[pass.(Primes[_])][Directory])
+	][
 	If[Eq[User] ["ls"]][
-		pass.(PipeFn[pass.(PutStrln[".."])][Directory])
+		pass.(PipeFn[pass.(PutStrln[".. key primes"])][Directory])
 	][
 		pass.(UniversalCommands[Directory][User][_])
-	]]
+	]]]]
 )
 
 
@@ -80,17 +86,11 @@ DocumentsDirectory = Directory.User.(
 	If[Eq[User] ["cd .."]][
 		pass.("/home")
 	][
-	If[Eq[User] ["key"]][
-		pass.(PipeFn[pass.(Key[_])][Directory])
-	][
-	If[Eq[User] ["primes"]][
-		pass.(PipeFn[pass.(Primes[_])][Directory])
-	][
 	If[Eq[User] ["ls"]][
-		pass.(PipeFn[pass.(PutStrln[".. key primes"])][Directory])
+		pass.(PipeFn[pass.(PutStrln[".."])][Directory])
 	][
 		pass.(UniversalCommands[Directory][User][_])
-	]]]]
+	]]
 )
 
 
@@ -119,7 +119,7 @@ PutTwo["=[ HOME_DIR Check 2 ]======[ Documents ]==> "][ Check[HomeDirectory["/ho
 
 
 
-Debug["Booting disk SANCTUSMACHINA..."]
+Debug["Booting disk SANCTUSMACHINA"]
 Halt[WaitTime]
 Debug["512 bytes read"]
 Halt[WaitTime]

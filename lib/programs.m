@@ -9,7 +9,7 @@ Primes = any.(
 Key = any.(
     PutStrln[
         If[Eq[Prompt["Enter your key: "]]["c81e728d9d4c2f636f067f89cc14862c"]]
-            ["There is a prime number associated with this key. Find it and "]
+            ["There is a prime number associated with this key. Find it."]
             ["Incorrect"]
     ]
 )
