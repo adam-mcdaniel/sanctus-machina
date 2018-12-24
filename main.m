@@ -18,7 +18,7 @@ UniversalCommands = Directory.User.(
 		pass.(PutStrln[Directory])
 	][
 	If[Eq[User] ["exit"]][
-		pass.(PutStrln["Exiting..."])
+		pass.(PipeFn[Exit][PutStrln["Goodbye"]])
 	][
 	If[Eq[User] ["clear"]][
 		pass.(Clear[_])
@@ -45,7 +45,7 @@ RootDirectory = Directory.User.(
 	If[Eq[User] ["ls"]][
 		pass.(PipeFn[pass.(PutStrln["log home"])][Directory])
 	][
-		pass.(PipeFn[pass.(UniversalCommands[Directory][User][_])][Directory])
+		pass.(UniversalCommands[Directory][User][_])
 	]]]
 )
 
@@ -57,7 +57,7 @@ LogDirectory = Directory.User.(
 	If[Eq[User] ["ls"]][
 		pass.(PipeFn[pass.(PutStrln[".."])][Directory])
 	][
-		pass.(PipeFn[pass.(UniversalCommands[Directory][User][_])][Directory])
+		pass.(UniversalCommands[Directory][User][_])
 	]]
 )
 
@@ -72,7 +72,7 @@ HomeDirectory = Directory.User.(
 	If[Eq[User] ["ls"]][
 		pass.(PipeFn[pass.(PutStrln[".. Documents"])][Directory])
 	][
-		pass.(PipeFn[pass.(UniversalCommands[Directory][User][_])][Directory])
+		pass.(UniversalCommands[Directory][User][_])
 	]]]
 )
 
